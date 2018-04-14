@@ -74,7 +74,7 @@ stemop<-function(dataset){
   return(dataset)
 }
 ```
-** apply the stemming function on a dataset**
+**apply the stemming function on a dataset**
 ```markdown
 nm<-read.csv('narendramodi.csv')
 stemdataset<-stemop(nm)
