@@ -8,9 +8,42 @@ text_tokens(text, stemmer = "en") # english stemmer
 ```
 [editor on GitHub](https://github.com/akash5551/stress-detection-in-social-networks/edit/master/README.md) 
 ### Dictionary Stemmer
-****
+_One common way to build a stemmer is from a list of (term, stem) pairs. Many such lists are available at lexoconista.com_
+**download the dictonary**
 ```markdown
+url <- "http://www.lexiconista.com/Datasets/lemmatization-en.zip"
+  tmp <- tempfile()
+  download.file(url, tmp)
 ```
+**extract the dictionary in a frame**
+```markdown
+con <- unz(tmp, "lemmatization-en.txt", encoding = "UTF-8")
+  tab <- read.delim(con, header=FALSE, stringsAsFactors = FALSE)
+  names(tab) <- c("stem", "term")
+  head(tab)
+```
+
+**define the stemming function**
+```markdown
+stem_list <- function(term) {
+    i <- match(term, tab$term)
+    if (is.na(i)) {
+      stem <- term
+    } else {
+      stem <- tab$stem[[i]]
+    }
+    stem
+  }
+```
+**apply on a dataset** 
+_laply take each line of text and perform operations on that build under plyr package_
+```markdown
+ dataset$tweet.<-laply(dataset$tweet.,function(text){
+    x<-text_tokens(text, stemmer = stem_list) # english stemmer
+    text<-paste(unlist(x), collapse = ' ')  
+  })
+```
+#### create a stem function for a dataset
 ```markdown
 stemop<-function(dataset){
   require('plyr')
@@ -40,6 +73,9 @@ stemop<-function(dataset){
   })
   return(dataset)
 }
+** apply the stemming function on a dataset**
+```
+```markdown
 nm<-read.csv('narendramodi.csv')
 stemdataset<-stemop(nm)
 nm$tweet.[264]
