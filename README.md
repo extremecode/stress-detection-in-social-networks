@@ -1,9 +1,12 @@
-## Welcome to GitHub Pages
+## Stemming
+Corpus comes with built-in support for the algorithmic stemmers provided by the Snowball Stemming Library, which supports the following languages: arabic (ar), danish (da), german (de), english (en), spanish (es), finnish (fi), french (fr), hungarian (hu), italian (it), dutch (nl), norwegian (no), portuguese (pt), romanian (ro), russian (ru), swedish (sv), tamil (ta), and turkish (tr). You can select one of these stemmers using either the full name of the language of the two-letter country code
+```markdown
+text <- "love loving lovingly loved lover lovely love"
+text_tokens(text, stemmer = "en") # english stemmer
+[[1]]
+[1] "love"  "love"  "love"  "love"  "lover" "love"  "love" 
 
-You can use the [editor on GitHub](https://github.com/akash5551/stress-detection-in-social-networks/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
+[editor on GitHub](https://github.com/akash5551/stress-detection-in-social-networks/edit/master/README.md) 
 ### Markdown
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
