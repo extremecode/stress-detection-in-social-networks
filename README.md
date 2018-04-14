@@ -5,7 +5,7 @@ text <- "love loving lovingly loved lover lovely love"
 text_tokens(text, stemmer = "en") # english stemmer
 [[1]]
 [1] "love"  "love"  "love"  "love"  "lover" "love"  "love" 
-
+```
 [editor on GitHub](https://github.com/akash5551/stress-detection-in-social-networks/edit/master/README.md) 
 ### Markdown
 
