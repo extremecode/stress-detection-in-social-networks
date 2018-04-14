@@ -7,28 +7,44 @@ text_tokens(text, stemmer = "en") # english stemmer
 [1] "love"  "love"  "love"  "love"  "lover" "love"  "love" 
 ```
 [editor on GitHub](https://github.com/akash5551/stress-detection-in-social-networks/edit/master/README.md) 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
+### Dictionary Stemmer
+****
 ```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
 ```
-
+```markdown
+stemop<-function(dataset){
+  require('plyr')
+  require('corpus')
+  #text stemming for live data
+  url <- "http://www.lexiconista.com/Datasets/lemmatization-en.zip"
+  tmp <- tempfile()
+  download.file(url, tmp)
+  # extract the contents
+  con <- unz(tmp, "lemmatization-en.txt", encoding = "UTF-8")
+  tab <- read.delim(con, header=FALSE, stringsAsFactors = FALSE)
+  names(tab) <- c("stem", "term")
+  head(tab)
+  tab
+  stem_list <- function(term) {
+    i <- match(term, tab$term)
+    if (is.na(i)) {
+      stem <- term
+    } else {
+      stem <- tab$stem[[i]]
+    }
+    stem
+  }
+  dataset$tweet.<-laply(dataset$tweet.,function(text){
+    x<-text_tokens(text, stemmer = stem_list) # english stemmer
+    text<-paste(unlist(x), collapse = ' ')  
+  })
+  return(dataset)
+}
+nm<-read.csv('narendramodi.csv')
+stemdataset<-stemop(nm)
+nm$tweet.[264]
+stemdataset$tweet.[264]
+```
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
 ### Jekyll Themes
