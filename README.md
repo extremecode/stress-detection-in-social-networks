@@ -1,3 +1,28 @@
+## create a twitter App
+http://docs.inboundnow.com/guide/create-twitter-application/
+## setup a twitter authentication 
+```markdown
+twitterauth<-function(){
+  #install.packages("TwitteR")
+  require('twitteR')
+  api_key<- "put api key here"
+  api_secret <- "put api sceret key here"
+  access_token <- "put access token here"
+  access_token_secret <- "pu access secret here"
+  setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
+}
+```
+**authentication save the token passing yes**
+```markdown
+> setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
+[1] "Using direct authentication"
+Use a local file ('.httr-oauth'), to cache OAuth access credentials between R sessions?
+
+1: Yes
+2: No
+
+Selection:yes
+```
 ## Stemming
 Corpus comes with built-in support for the algorithmic stemmers provided by the Snowball Stemming Library, which supports the following languages: arabic (ar), danish (da), german (de), english (en), spanish (es), finnish (fi), french (fr), hungarian (hu), italian (it), dutch (nl), norwegian (no), portuguese (pt), romanian (ro), russian (ru), swedish (sv), tamil (ta), and turkish (tr). You can select one of these stemmers using either the full name of the language of the two-letter country code
 ```markdown
