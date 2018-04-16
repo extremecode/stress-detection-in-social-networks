@@ -12,9 +12,9 @@ twitterauth<-function(){
   setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
 }
 ```
-**authentication
-save the Oauth token
-passing yes as argument**
+**authentication**
+**save the Oauth token**
+**passing yes as argument**
 ```markdown
 > setup_twitter_oauth(api_key,api_secret,access_token,access_token_secret)
 [1] "Using direct authentication"
