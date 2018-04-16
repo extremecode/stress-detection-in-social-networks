@@ -110,6 +110,16 @@ Userdataret<-function(tweetuser,nooftweets){
   write.csv(b, file = File)
 }
 ```
+## Retrive user friends 
+```markdown
+  User <- getUser("paas the user name here")
+  User_Friends_IDs<-User$getFriends(n=nooffriends)##pass no of friends u want to retrieve
+  length(User_Friends_IDs)##check if retrieve correctly or not
+  friends.df<-twListToDF(User_Friends_IDs)
+  for (x in friends.df$name) { ##loop over each  friends and collect their information
+  Frnddataret(x,no_of_tweets)
+  }
+```
 ## Stemming
 Corpus comes with built-in support for the algorithmic stemmers provided by the Snowball Stemming Library, which supports the following languages: arabic (ar), danish (da), german (de), english (en), spanish (es), finnish (fi), french (fr), hungarian (hu), italian (it), dutch (nl), norwegian (no), portuguese (pt), romanian (ro), russian (ru), swedish (sv), tamil (ta), and turkish (tr). You can select one of these stemmers using either the full name of the language of the two-letter country code
 ```markdown
