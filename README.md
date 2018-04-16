@@ -24,6 +24,92 @@ Use a local file ('.httr-oauth'), to cache OAuth access credentials between R se
 
 Selection:yes
 ```
+## pull a user data
+**search the user timeline and save the data as a data frame**
+```markdown
+tweets<-userTimeline(tweetuser,n=nooftweets)
+  tweets.df<-twListToDF(tweets)
+```
+**clean the tweets**
+```markdown
+clean_tweet = laply(tweets.df$text, function(tweet) {
+    tweet = gsub('https://','',tweet) # removes https://
+    tweet = gsub('http://','',tweet) # removes http://
+    tweet=gsub('[^[:graph:]]', ' ',tweet) ## removes graphic characters
+    #like emoticons
+    tweet = gsub('[[:punct:]]', '', tweet) # removes punctuation
+    tweet = gsub('[[:cntrl:]]', '', tweet) # removes control characters
+    tweet = gsub('\\d+', '', tweet) # removes numbers
+    tweet=str_replace_all(tweet,"[^[:graph:]]", " ")
+    
+    tweet = tolower(tweet) # makes all letters lowercase
+  })
+  tweets.df$text<-clean_tweet
+```
+**get user profile information**
+```markdown
+tweets.df$text<-clean_tweet
+  temp_df <- twListToDF(lookupUsers(tweetuser))
+  temp_df
+```
+**replicate the information on the basis on no of tweets and bind the information in  a new table**
+```markdown
+a<-temp_df[rep(seq_len(nrow(temp_df)), each=length(tweets)),]
+b<-cbind(a,tweets.df$created,tweets.df$text)
+```
+**rename the columns and save these as a username.csv file**
+```markdown
+b<-cbind(a,tweets.df$created,tweets.df$text)
+  names(b)[1]<-paste("user name")
+  names(b)[18]<-paste("tweets date")
+  names(b)[19]<-paste("tweet ") 
+  dim(b)
+  colnames(b)
+  filename<-tweetuser
+  Format<-"csv"
+  File<-paste(filename,Format,sep=".")
+  write.csv(b, file = File)
+```
+**create a wrap function for user data retrival on the basis of no of tweets**
+```markdown
+Userdataret<-function(tweetuser,nooftweets){
+  setwd('C:\\Users\\guptakas\\Rscripts\\data\\user')
+  require('dplyr')
+  require('twitteR')
+  require('stringr')
+  #tweets<-searchTwitter(tweetuser,n=nooftweets)
+  tweets<-userTimeline(tweetuser,n=nooftweets)
+  tweets.df<-twListToDF(tweets)
+  clean_tweet = laply(tweets.df$text, function(tweet) {
+    tweet = gsub('https://','',tweet) # removes https://
+    tweet = gsub('http://','',tweet) # removes http://
+    tweet=gsub('[^[:graph:]]', ' ',tweet) ## removes graphic characters
+    #like emoticons
+    tweet = gsub('[[:punct:]]', '', tweet) # removes punctuation
+    tweet = gsub('[[:cntrl:]]', '', tweet) # removes control characters
+    tweet = gsub('\\d+', '', tweet) # removes numbers
+    tweet=str_replace_all(tweet,"[^[:graph:]]", " ")
+    
+    tweet = tolower(tweet) # makes all letters lowercase
+  })
+  tweets.df$text<-clean_tweet
+  temp_df <- twListToDF(lookupUsers(tweetuser))
+  temp_df
+  colnames(temp_df)
+  a<-temp_df[rep(seq_len(nrow(temp_df)), each=length(tweets)),]
+  a
+  b<-cbind(a,tweets.df$created,tweets.df$text)
+  names(b)[1]<-paste("user name")
+  names(b)[18]<-paste("tweets date")
+  names(b)[19]<-paste("tweet ") 
+  dim(b)
+  colnames(b)
+  filename<-tweetuser
+  Format<-"csv"
+  File<-paste(filename,Format,sep=".")
+  write.csv(b, file = File)
+}
+```
 ## Stemming
 Corpus comes with built-in support for the algorithmic stemmers provided by the Snowball Stemming Library, which supports the following languages: arabic (ar), danish (da), german (de), english (en), spanish (es), finnish (fi), french (fr), hungarian (hu), italian (it), dutch (nl), norwegian (no), portuguese (pt), romanian (ro), russian (ru), swedish (sv), tamil (ta), and turkish (tr). You can select one of these stemmers using either the full name of the language of the two-letter country code
 ```markdown
