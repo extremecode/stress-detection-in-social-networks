@@ -242,7 +242,7 @@ head(tweets_classified$text)
 [1] 0 0 0 0 0
 ```
 #### apply a conversion
-_convert the sentiment classes to 0&1 and tweets character from latint to ascii _
+_convert the sentiment classes to 0&1 and tweets character from latint to ascii_
 ```markdown
 tweets_classified%>%
   # converting some symbols
@@ -250,9 +250,25 @@ tweets_classified%>%
   # replacing class values
   mutate(sentiment = ifelse(sentiment == 0, 0, 1))
 ```
+#### split into train and test
+80% to train and 20% test
+```markdown
+# data splitting on train and test
+set.seed(2340)
+trainIndex <- createDataPartition(tweets_classified$sentiment, p = 0.8, 
+                                  list = FALSE, 
+                                  times = 1)
+tweets_train <- tweets_classified[trainIndex, ]
+tweets_test <- tweets_classified[-trainIndex, ]
+```
 ####
 ```markdown
 ```
+
+####
+```markdown
+```
+
 ####
 ```markdown
 ```
