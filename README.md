@@ -211,8 +211,16 @@ stemdataset$tweet.[264]
 > stemdataset$tweet.[264]
 [1] "it be gladden to witness a very healthy spirit of competition among the state to draw maximum investment this tcoqejbqfzcla"
 ```
+#### train the model using doc2vec
+_This uses system facilities to convert a character vector between encodings: the ‘i’ stands for ‘internationalization’_
+```markdown
+### loading and preprocessing a training set of tweets
+# function for converting some symbols
+conv_fun <- function(x) iconv(x, "latin1", "ASCII", "")
+```
 _ gladdening is converted to root gladden_
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+
 
 ### Jekyll Themes
 
