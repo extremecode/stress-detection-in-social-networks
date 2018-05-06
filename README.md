@@ -212,7 +212,8 @@ stemdataset$tweet.[264]
 [1] "it be gladden to witness a very healthy spirit of competition among the state to draw maximum investment this tcoqejbqfzcla"
 ```
 _ gladdening is converted to root gladden_
-####dataset source
+
+#### dataset source
 [dataset link](https://docs.google.com/file/d/0B04GJPshIjmPRnZManQwWEdTZjg/edit)
 #### train the model using doc2vec
 _This uses system facilities to convert a character vector between encodings: the ‘i’ stands for ‘internationalization’_
