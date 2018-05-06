@@ -332,8 +332,13 @@ dtm_test <- create_dtm(it_test, vectorizer)
 it contains 615245 unique words in training set
 ```
 
-####
+#### Do a conversion of text to numeric conversion input is a Document term matrix 
 ```markdown
+# define tf-idf model
+tfidf <- TfIdf$new()
+# fit the model to the train data and transform it with the fitted model
+dtm_train_tfidf <- fit_transform(dtm_train, tfidf)
+dtm_test_tfidf <- fit_transform(dtm_test, tfidf)
 ```
 ####
 ```markdown
@@ -344,6 +349,7 @@ it contains 615245 unique words in training set
 ####
 ```markdown
 ```
+![ROC plot](/Rplot.png)
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
 
