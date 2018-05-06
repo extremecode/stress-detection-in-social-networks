@@ -261,8 +261,57 @@ trainIndex <- createDataPartition(tweets_classified$sentiment, p = 0.8,
 tweets_train <- tweets_classified[trainIndex, ]
 tweets_test <- tweets_classified[-trainIndex, ]
 ```
-####
+#### tokenize data and divide the data on chunks
 ```markdown
+##### doc2vec #####
+# define preprocessing function and tokenization function
+_word_tokenizer will split the text to words and itoken function divide the data on processable chunks_
+prep_fun <- tolower
+tok_fun <- word_tokenizer
+it_train <- itoken(tweets_train$text, 
+                   preprocessor = prep_fun, 
+                   tokenizer = tok_fun,
+                   ids = tweets_train$id,
+                   progressbar = TRUE)
+it_test <- itoken(tweets_test$text, 
+                  preprocessor = prep_fun, 
+                  tokenizer = tok_fun,
+                  ids = tweets_test$id,
+                  progressbar = TRUE)
+> it_train
+<itoken>
+  Inherits from: <iterator>
+  Public:
+    chunk_size: 128000
+    clone: function (deep = FALSE) 
+    counter: 0
+    ids: 1467810672 1467810917 1467811184 1467811193 1467811592 1 ...
+    initialize: function (iterable, ids = NULL, n_chunks = 10, progress_ = interactive(), 
+    is_complete: active binding
+    iterable: is upset that he can't update his Facebook by texting it ...
+    length: active binding
+    nextElem: function () 
+    preprocessor: list
+    progress: TRUE
+    progressbar: txtProgressBar
+    tokenizer: list
+> it_test
+<itoken>
+  Inherits from: <iterator>
+  Public:
+    chunk_size: 32000
+    clone: function (deep = FALSE) 
+    counter: 0
+    ids: 1467811372 1467812784 1467814180 1467815988 1467817502 1 ...
+    initialize: function (iterable, ids = NULL, n_chunks = 10, progress_ = interactive(), 
+    is_complete: active binding
+    iterable: @Kwesidei not the whole crew  @smarrison i would've been ...
+    length: active binding
+    nextElem: function () 
+    preprocessor: list
+    progress: TRUE
+    progressbar: txtProgressBar
+    tokenizer: list
 ```
 
 ####
