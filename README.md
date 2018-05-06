@@ -340,16 +340,35 @@ tfidf <- TfIdf$new()
 dtm_train_tfidf <- fit_transform(dtm_train, tfidf)
 dtm_test_tfidf <- fit_transform(dtm_test, tfidf)
 ```
-####
+#### train the model using doc2vec
 ```markdown
-```
-####
-```markdown
-```
-####
-```markdown
+# train the model
+t1 <- Sys.time()
+glmnet_classifier <- cv.glmnet(x = dtm_train_tfidf, y = tweets_train[['sentiment']], 
+                               family = 'binomial', 
+                               # L1 penalty
+                               alpha = 1,
+                               # interested in the area under ROC curve
+                               type.measure = "auc",
+                               # 5-fold cross-validation
+                               nfolds = 5,
+                               # high value is less accurate, but has faster training
+                               thresh = 1e-3,
+                               # again lower number of iterations for faster training
+                               maxit = 1e3)
+glmnet_classifier<-readRDS('glmnet_classifier.RDS')
+print(difftime(Sys.time(), t1, units = 'mins'))
+> print(difftime(Sys.time(), t1, units = 'mins'))
+Time difference of 245.54826407 mins
 ```
 ![ROC plot](/Rplot.png)
+
+####
+```markdown
+```
+####
+```markdown
+```
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
 
