@@ -222,7 +222,7 @@ _This uses system facilities to convert a character vector between encodings: th
 # function for converting some symbols
 conv_fun <- function(x) iconv(x, "latin1", "ASCII", "")
 ```
-####load the training set
+#### load the training set
 _load the tweets and assign columnnames_
 ```markdown
 tweets_classified <- read.csv('training.1600000.processed.noemoticon.csv',stringsAsFactors=FALSE)
@@ -230,11 +230,25 @@ dim(tweets_classified)
 colnames(tweets_classified)<- c('sentiment', 'id', 'date', 'query', 'user', 'text')
 head(tweets_classified$text)
 ```
-####
+#### some tweets and their classes
 ```markdown
+> head(tweets_classified$text)
+[1] "is upset that he can't update his Facebook by texting it... and might cry as a result  School today also. Blah!"
+[2] "@Kenichan I dived many times for the ball. Managed to save 50%  The rest go out of bounds"                      
+[3] "my whole body feels itchy and like its on fire "                                                                
+[4] "@nationwideclass no, it's not behaving at all. i'm mad. why am i here? because I can't see you all over there. "
+[5] "@Kwesidei not the whole crew "
+> head(tweets_classified$sentiment)
+[1] 0 0 0 0 0
 ```
-####
+#### apply a conversion
+_convert the sentiment classes to 0&1 and tweets character from latint to ascii _
 ```markdown
+tweets_classified%>%
+  # converting some symbols
+  dmap_at('text', conv_fun) %>%
+  # replacing class values
+  mutate(sentiment = ifelse(sentiment == 0, 0, 1))
 ```
 ####
 ```markdown
