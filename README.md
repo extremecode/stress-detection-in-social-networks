@@ -361,9 +361,10 @@ print(difftime(Sys.time(), t1, units = 'mins'))
 > print(difftime(Sys.time(), t1, units = 'mins'))
 Time difference of 245.54826407 mins
 ```
+#### plot the AUC Curve
 ![ROC plot](/Rplot.png)
 
-####
+#### save the model 
 ```markdown
 ```
 ####
