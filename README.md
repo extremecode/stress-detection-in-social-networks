@@ -313,11 +313,34 @@ it_test <- itoken(tweets_test$text,
     progressbar: txtProgressBar
     tokenizer: list
 ```
+#### create a vocabulary and document-term matrix
+_create a vocabulary of words and create a dtm for train and test using vocablary  it will show progress at increment of 10% because of 10 chunks_
+```markdown
+# creating vocabulary and document-term matrix
+vocab <- create_vocabulary(it_train)
+vocab
+vectorizer <- vocab_vectorizer(vocab)
+vectorizer
+dtm_train <- create_dtm(it_train, vectorizer)
+dtm_test <- create_dtm(it_test, vectorizer)
+> dtm_train <- create_dtm(it_train, vectorizer)
+  |============================================                                                                  |  40%
+> dtm_train <- create_dtm(it_train, vectorizer)
+  |==============================================================================================================| 100%
+ > dtm_train
+1280000 x 615245 sparse Matrix 
+it contains 615245 unique words in training set
+```
 
 ####
 ```markdown
 ```
-
+####
+```markdown
+```
+####
+```markdown
+```
 ####
 ```markdown
 ```
