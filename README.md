@@ -265,7 +265,7 @@ tweets_test <- tweets_classified[-trainIndex, ]
 ```markdown
 ##### doc2vec #####
 # define preprocessing function and tokenization function
-_word_tokenizer will split the text to words and itoken function divide the data on processable chunks_
+_word tokenizer will split the text to words and itoken function divide the data on processable chunks_
 prep_fun <- tolower
 tok_fun <- word_tokenizer
 it_train <- itoken(tweets_train$text, 
