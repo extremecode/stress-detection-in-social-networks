@@ -211,6 +211,9 @@ stemdataset$tweet.[264]
 > stemdataset$tweet.[264]
 [1] "it be gladden to witness a very healthy spirit of competition among the state to draw maximum investment this tcoqejbqfzcla"
 ```
+_ gladdening is converted to root gladden_
+####dataset source
+[dataset link](https://docs.google.com/file/d/0B04GJPshIjmPRnZManQwWEdTZjg/edit)
 #### train the model using doc2vec
 _This uses system facilities to convert a character vector between encodings: the ‘i’ stands for ‘internationalization’_
 ```markdown
@@ -218,7 +221,26 @@ _This uses system facilities to convert a character vector between encodings: th
 # function for converting some symbols
 conv_fun <- function(x) iconv(x, "latin1", "ASCII", "")
 ```
-_ gladdening is converted to root gladden_
+####load the training set
+_load the tweets and assign columnnames_
+```markdown
+tweets_classified <- read.csv('training.1600000.processed.noemoticon.csv',stringsAsFactors=FALSE)
+dim(tweets_classified)
+colnames(tweets_classified)<- c('sentiment', 'id', 'date', 'query', 'user', 'text')
+head(tweets_classified$text)
+```
+####
+```markdown
+```
+####
+```markdown
+```
+####
+```markdown
+```
+####
+```markdown
+```
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
 
 
