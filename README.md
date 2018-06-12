@@ -368,7 +368,15 @@ Time difference of 245.54826407 mins
 > print(paste("max AUC =", round(max(glmnet_classifier$cvm), 4)))
 [1] "max AUC = 0.8746"
 > preds <- predict(glmnet_classifier, dtm_test_tfidf, type = 'response')[ ,1]
-
+> head(tweets_test$text)
+[1] "@Kwesidei not the whole crew "                                                                                                      
+[2] "@smarrison i would've been the first, but i didn't have a gun.    not really though, zac snyder's just a doucheclown."              
+[3] "this week is not going as i had hoped "                                                                                             
+[4] "thought sleeping in was an option tomorrow but realizing that it now is not. evaluations in the morning and work in the afternoon! "
+[5] "@fleurylis I don't either. Its depressing. I don't think I even want to know about the kids in suitcases. "                         
+[6] "He's the reason for the teardrops on my guitar the only one who has enough of me to break my heart "                                
+> head(preds)
+1467811372 1467812784 1467814180 1467815988 1467817502 1467818481 
 ```
 #### save the model 
 ```markdown
