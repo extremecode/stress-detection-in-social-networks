@@ -368,8 +368,7 @@ Time difference of 245.54826407 mins
 > print(paste("max AUC =", round(max(glmnet_classifier$cvm), 4)))
 [1] "max AUC = 0.8746"
 > preds <- predict(glmnet_classifier, dtm_test_tfidf, type = 'response')[ ,1]
-> glmnet:::auc(as.numeric(tweets_test$sentiment), preds)
-[1] "0.8631"
+
 ```
 #### save the model 
 ```markdown
