@@ -212,7 +212,184 @@ stemdataset$tweet.[264]
 [1] "it be gladden to witness a very healthy spirit of competition among the state to draw maximum investment this tcoqejbqfzcla"
 ```
 _ gladdening is converted to root gladden_
+
+#### dataset source
+[dataset link](https://docs.google.com/file/d/0B04GJPshIjmPRnZManQwWEdTZjg/edit)
+#### train the model using doc2vec
+_This uses system facilities to convert a character vector between encodings: the ‘i’ stands for ‘internationalization’_
+```markdown
+### loading and preprocessing a training set of tweets
+# function for converting some symbols
+conv_fun <- function(x) iconv(x, "latin1", "ASCII", "")
+```
+#### load the training set
+_load the tweets and assign columnnames_
+```markdown
+tweets_classified <- read.csv('training.1600000.processed.noemoticon.csv',stringsAsFactors=FALSE)
+dim(tweets_classified)
+colnames(tweets_classified)<- c('sentiment', 'id', 'date', 'query', 'user', 'text')
+head(tweets_classified$text)
+```
+#### some tweets and their classes
+```markdown
+> head(tweets_classified$text)
+[1] "is upset that he can't update his Facebook by texting it... and might cry as a result  School today also. Blah!"
+[2] "@Kenichan I dived many times for the ball. Managed to save 50%  The rest go out of bounds"                      
+[3] "my whole body feels itchy and like its on fire "                                                                
+[4] "@nationwideclass no, it's not behaving at all. i'm mad. why am i here? because I can't see you all over there. "
+[5] "@Kwesidei not the whole crew "
+> head(tweets_classified$sentiment)
+[1] 0 0 0 0 0
+```
+#### apply a conversion
+_convert the sentiment classes to 0&1 and tweets character from latint to ascii_
+```markdown
+tweets_classified%>%
+  # converting some symbols
+  dmap_at('text', conv_fun) %>%
+  # replacing class values
+  mutate(sentiment = ifelse(sentiment == 0, 0, 1))
+```
+#### split into train and test
+80% to train and 20% test
+```markdown
+# data splitting on train and test
+set.seed(2340)
+trainIndex <- createDataPartition(tweets_classified$sentiment, p = 0.8, 
+                                  list = FALSE, 
+                                  times = 1)
+tweets_train <- tweets_classified[trainIndex, ]
+tweets_test <- tweets_classified[-trainIndex, ]
+```
+#### tokenize data and divide the data on chunks
+```markdown
+##### doc2vec #####
+# define preprocessing function and tokenization function
+_word tokenizer will split the text to words and itoken function divide the data on processable chunks_
+prep_fun <- tolower
+tok_fun <- word_tokenizer
+it_train <- itoken(tweets_train$text, 
+                   preprocessor = prep_fun, 
+                   tokenizer = tok_fun,
+                   ids = tweets_train$id,
+                   progressbar = TRUE)
+it_test <- itoken(tweets_test$text, 
+                  preprocessor = prep_fun, 
+                  tokenizer = tok_fun,
+                  ids = tweets_test$id,
+                  progressbar = TRUE)
+> it_train
+<itoken>
+  Inherits from: <iterator>
+  Public:
+    chunk_size: 128000
+    clone: function (deep = FALSE) 
+    counter: 0
+    ids: 1467810672 1467810917 1467811184 1467811193 1467811592 1 ...
+    initialize: function (iterable, ids = NULL, n_chunks = 10, progress_ = interactive(), 
+    is_complete: active binding
+    iterable: is upset that he can't update his Facebook by texting it ...
+    length: active binding
+    nextElem: function () 
+    preprocessor: list
+    progress: TRUE
+    progressbar: txtProgressBar
+    tokenizer: list
+> it_test
+<itoken>
+  Inherits from: <iterator>
+  Public:
+    chunk_size: 32000
+    clone: function (deep = FALSE) 
+    counter: 0
+    ids: 1467811372 1467812784 1467814180 1467815988 1467817502 1 ...
+    initialize: function (iterable, ids = NULL, n_chunks = 10, progress_ = interactive(), 
+    is_complete: active binding
+    iterable: @Kwesidei not the whole crew  @smarrison i would've been ...
+    length: active binding
+    nextElem: function () 
+    preprocessor: list
+    progress: TRUE
+    progressbar: txtProgressBar
+    tokenizer: list
+```
+#### create a vocabulary and document-term matrix
+_create a vocabulary of words and create a dtm for train and test using vocablary  it will show progress at increment of 10% because of 10 chunks_
+```markdown
+# creating vocabulary and document-term matrix
+vocab <- create_vocabulary(it_train)
+vocab
+vectorizer <- vocab_vectorizer(vocab)
+vectorizer
+dtm_train <- create_dtm(it_train, vectorizer)
+dtm_test <- create_dtm(it_test, vectorizer)
+> dtm_train <- create_dtm(it_train, vectorizer)
+  |============================================                                                                  |  40%
+> dtm_train <- create_dtm(it_train, vectorizer)
+  |==============================================================================================================| 100%
+ > dtm_train
+1280000 x 615245 sparse Matrix 
+it contains 615245 unique words in training set
+```
+
+#### Do a conversion of text to numeric conversion input is a Document term matrix 
+```markdown
+# define tf-idf model
+tfidf <- TfIdf$new()
+# fit the model to the train data and transform it with the fitted model
+dtm_train_tfidf <- fit_transform(dtm_train, tfidf)
+dtm_test_tfidf <- fit_transform(dtm_test, tfidf)
+```
+#### train the model using doc2vec
+```markdown
+# train the model
+t1 <- Sys.time()
+glmnet_classifier <- cv.glmnet(x = dtm_train_tfidf, y = tweets_train[['sentiment']], 
+                               family = 'binomial', 
+                               # L1 penalty
+                               alpha = 1,
+                               # interested in the area under ROC curve
+                               type.measure = "auc",
+                               # 5-fold cross-validation
+                               nfolds = 5,
+                               # high value is less accurate, but has faster training
+                               thresh = 1e-3,
+                               # again lower number of iterations for faster training
+                               maxit = 1e3)
+glmnet_classifier<-readRDS('glmnet_classifier.RDS')
+print(difftime(Sys.time(), t1, units = 'mins'))
+> print(difftime(Sys.time(), t1, units = 'mins'))
+Time difference of 245.54826407 mins
+```
+#### plot the AUC Curve
+![ROC plot](/Rplot.png)
+### check the AUC of train and test
+```markdown
+> print(paste("max AUC =", round(max(glmnet_classifier$cvm), 4)))
+[1] "max AUC = 0.8746"
+> preds <- predict(glmnet_classifier, dtm_test_tfidf, type = 'response')[ ,1]
+> head(tweets_test$text)
+[1] "@Kwesidei not the whole crew "                                                                                                      
+[2] "@smarrison i would've been the first, but i didn't have a gun.    not really though, zac snyder's just a doucheclown."              
+[3] "this week is not going as i had hoped "                                                                                             
+[4] "thought sleeping in was an option tomorrow but realizing that it now is not. evaluations in the morning and work in the afternoon! "
+[5] "@fleurylis I don't either. Its depressing. I don't think I even want to know about the kids in suitcases. "                         
+[6] "He's the reason for the teardrops on my guitar the only one who has enough of me to break my heart "                                
+> head(preds)
+1467811372 1467812784 1467814180 1467815988 1467817502 1467818481 
+```
+#### save the model 
+```markdown
+#save the model and Vocabulary for prediction
+saveRDS(glmnet_classifier, 'glmnet_classifier.RDS')
+saveRDS(vectorizer,'Vectorizer.RDS')
+#######################################################
+```
+####
+```markdown
+```
 For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+
 
 ### Jekyll Themes
 
